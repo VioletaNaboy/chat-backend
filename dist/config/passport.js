@@ -21,6 +21,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
     callbackURL: "https://chat-backend-ofrx.onrender.com/auth/google/callback"
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
+    console.log('Google Profile:', profile);
     try {
         let user = yield User_1.User.findOne({ googleId: profile.id });
         if (!user) {

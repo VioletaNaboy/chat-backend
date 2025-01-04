@@ -7,6 +7,7 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     callbackURL: "https://chat-backend-ofrx.onrender.com/auth/google/callback"
 }, async (accessToken, refreshToken, profile, done) => {
+    console.log('Google Profile:', profile);
     try {
         let user = await User.findOne({ googleId: profile.id });
         if (!user) {
