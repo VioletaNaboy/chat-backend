@@ -12,21 +12,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv_1 = __importDefault(require("dotenv"));
-const db_1 = __importDefault(require("./config/db"));
-const app_1 = __importDefault(require("./app"));
 const passport_1 = __importDefault(require("passport"));
-const express_session_1 = __importDefault(require("express-session"));
-require("./config/passport");
-const auth_1 = __importDefault(require("./routes/auth"));
-dotenv_1.default.config();
-const PORT = process.env.PORT || 5000;
-app_1.default.use((0, express_session_1.default)({ secret: 'secret', resave: false, saveUninitialized: true }));
-app_1.default.use(passport_1.default.initialize());
-app_1.default.use(passport_1.default.session());
-app_1.default.use('/auth', auth_1.default);
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.default)();
-    app_1.default.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
-startServer();
+const passport_google_oauth20_1 = require("passport-google-oauth20");
+const User_1 = require("../models/User");
+passport_1.default.use(new passport_google_oauth20_1.Strategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://https://chat-backend-ofrx.onrender.com/auth/google/callback"
+}, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let user = yield User_1.User.findOne({ googleId: profile.id });
+        if (!user) {
+            user = new User_1.User({
+                googleId: profile.id,
+                displayName: profile.displayName,
+                emails: profile.emails,
+                image: profile.photos ? profile.photos[0].value : ''
+            });
+            yield user.save();
+        }
+        done(user);
+    }
+    catch (err) {
+        done(err);
+    }
+})));

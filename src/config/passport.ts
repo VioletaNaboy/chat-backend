@@ -18,8 +18,8 @@ passport.use(new GoogleStrategy({
             });
             await user.save();
         }
-        done(null, user);
+        done(user);
     } catch (err) {
-        done(err, null);
+        done(err);
     }
 }));

@@ -12,21 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv_1 = __importDefault(require("dotenv"));
-const db_1 = __importDefault(require("./config/db"));
-const app_1 = __importDefault(require("./app"));
+const express_1 = require("express");
 const passport_1 = __importDefault(require("passport"));
-const express_session_1 = __importDefault(require("express-session"));
-require("./config/passport");
-const auth_1 = __importDefault(require("./routes/auth"));
-dotenv_1.default.config();
-const PORT = process.env.PORT || 5000;
-app_1.default.use((0, express_session_1.default)({ secret: 'secret', resave: false, saveUninitialized: true }));
-app_1.default.use(passport_1.default.initialize());
-app_1.default.use(passport_1.default.session());
-app_1.default.use('/auth', auth_1.default);
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.default)();
-    app_1.default.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
-startServer();
+const authService_1 = require("../services/authService");
+const router = (0, express_1.Router)();
+router.get('/google', passport_1.default.authenticate('google', { scope: ['email'] }));
+router.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/' }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    const token = (0, authService_1.generateToken)(user === null || user === void 0 ? void 0 : user.id);
+    res.json({ token });
+}));
+exports.default = router;
