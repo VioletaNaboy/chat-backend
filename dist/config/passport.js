@@ -36,7 +36,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
             });
             yield user.save();
         }
-        done(user);
+        done(null, user);
     }
     catch (err) {
         done(err);

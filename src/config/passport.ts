@@ -22,7 +22,7 @@ passport.use(new GoogleStrategy({
             });
             await user.save();
         }
-        done(user);
+        done(null, user);
     } catch (err) {
         done(err);
     }
