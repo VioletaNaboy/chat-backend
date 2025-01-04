@@ -17,11 +17,18 @@ const db_1 = __importDefault(require("./config/db"));
 const app_1 = __importDefault(require("./app"));
 const passport_1 = __importDefault(require("passport"));
 const express_session_1 = __importDefault(require("express-session"));
+const connect_mongo_1 = __importDefault(require("connect-mongo"));
 require("./config/passport");
 const auth_1 = __importDefault(require("./routes/auth"));
 dotenv_1.default.config();
 const PORT = process.env.PORT || 5000;
-app_1.default.use((0, express_session_1.default)({ secret: 'secret', resave: false, saveUninitialized: true }));
+const secret = process.env.JWT_SECRET || 'default-secret';
+app_1.default.use((0, express_session_1.default)({
+    secret: secret,
+    resave: false,
+    saveUninitialized: true,
+    store: connect_mongo_1.default.create({ mongoUrl: process.env.MONGODB_URL }),
+}));
 app_1.default.use(passport_1.default.initialize());
 app_1.default.use(passport_1.default.session());
 app_1.default.use('/auth', auth_1.default);
