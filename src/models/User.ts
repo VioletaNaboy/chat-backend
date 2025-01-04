@@ -9,7 +9,7 @@ export interface IUser extends Document {
 
 const UserSchema: Schema = new Schema({
     googleId: { type: String, required: true, unique: true },
-    displayName: { type: String, required: true },
+    displayName: { type: String },
     emails: [{
         value: { type: String, required: true },
         verified: { type: Boolean, required: true }
