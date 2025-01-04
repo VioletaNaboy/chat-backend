@@ -10,7 +10,7 @@ router.get('/google', passport.authenticate('google', { scope: ['email'] }));
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/' }),
     async (req, res) => {
         const user = req.user as IUser;
-        const token = generateToken(user?.id as string);
+        const token = generateToken(user?.googleId as string);
         res.json({ token });
     });
 

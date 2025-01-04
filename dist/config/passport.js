@@ -15,6 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const passport_1 = __importDefault(require("passport"));
 const passport_google_oauth20_1 = require("passport-google-oauth20");
 const User_1 = require("../models/User");
+passport_1.default.serializeUser((user, done) => {
+    done(null, user.googleId);
+});
+passport_1.default.deserializeUser((id, done) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield User_1.User.findOne({ googleId: id });
+        done(null, user);
+    }
+    catch (err) {
+        done(err);
+    }
+}));
 passport_1.default.use(new passport_google_oauth20_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -36,9 +48,9 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
             });
             yield user.save();
         }
-        done(null, user);
+        done(null, user); // Return user after successful authentication
     }
     catch (err) {
-        done(err);
+        done(err); // Return error if any
     }
 })));

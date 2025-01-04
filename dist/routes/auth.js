@@ -19,7 +19,7 @@ const router = (0, express_1.Router)();
 router.get('/google', passport_1.default.authenticate('google', { scope: ['email'] }));
 router.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/' }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
-    const token = (0, authService_1.generateToken)(user === null || user === void 0 ? void 0 : user.id);
+    const token = (0, authService_1.generateToken)(user === null || user === void 0 ? void 0 : user.googleId);
     res.json({ token });
 }));
 exports.default = router;
