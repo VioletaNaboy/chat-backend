@@ -13,7 +13,10 @@ passport.use(new GoogleStrategy({
             user = new User({
                 googleId: profile.id,
                 displayName: profile.displayName,
-                emails: profile.emails,
+                emails: profile.emails?.map(email => ({
+                    value: email.value,
+                    verified: email.verified
+                })),
                 image: profile.photos ? profile.photos[0].value : ''
             });
             await user.save();
@@ -23,3 +26,4 @@ passport.use(new GoogleStrategy({
         done(err);
     }
 }));
+

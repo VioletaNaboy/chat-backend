@@ -20,13 +20,17 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "https://chat-backend-ofrx.onrender.com/auth/google/callback"
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         let user = yield User_1.User.findOne({ googleId: profile.id });
         if (!user) {
             user = new User_1.User({
                 googleId: profile.id,
                 displayName: profile.displayName,
-                emails: profile.emails,
+                emails: (_a = profile.emails) === null || _a === void 0 ? void 0 : _a.map(email => ({
+                    value: email.value,
+                    verified: email.verified
+                })),
                 image: profile.photos ? profile.photos[0].value : ''
             });
             yield user.save();
