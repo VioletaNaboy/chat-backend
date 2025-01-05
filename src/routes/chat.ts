@@ -67,6 +67,7 @@ router.delete('/chats/:id', verifyUser, async (req: CustomRequest, res: Response
 });
 router.get('/chats', verifyUser, async (req: CustomRequest, res: Response) => {
     try {
+        console.log(req.user)
         const chats = await Chat.find({ createdBy: req.user });;
 
         if (chats.length === 0) {

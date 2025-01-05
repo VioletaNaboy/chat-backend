@@ -66,6 +66,7 @@ router.delete('/chats/:id', verifyUser_1.verifyUser, (req, res) => __awaiter(voi
 }));
 router.get('/chats', verifyUser_1.verifyUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log(req.user);
         const chats = yield Chat_1.default.find({ createdBy: req.user });
         ;
         if (chats.length === 0) {
