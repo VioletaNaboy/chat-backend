@@ -10,9 +10,9 @@ const verifyUser = (req, res, next) => {
     }
     try {
         const decoded = (0, authService_1.verifyToken)(token);
-        req.user = decoded;
-        console.log(req.user);
-        console.log(decoded);
+        if (typeof decoded !== 'string' && 'id' in decoded) {
+            req.user = decoded.id;
+        }
         next();
     }
     catch (err) {

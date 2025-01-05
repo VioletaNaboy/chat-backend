@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const passport_1 = __importDefault(require("passport"));
 const authService_1 = require("../services/authService");
+const authService_2 = require("../services/authService");
 const router = (0, express_1.Router)();
 router.get('/google', passport_1.default.authenticate('google', { scope: ['email'] }));
 router.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/' }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -32,4 +33,21 @@ router.get('/google/callback', passport_1.default.authenticate('google', { failu
         res.status(401).json({ message: 'Authentication failed' });
     }
 }));
+router.post('/auth/verify', (req, res) => {
+    var _a;
+    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+    if (!token) {
+        res.status(401).json({ valid: false, message: 'No token provided' });
+        return;
+    }
+    try {
+        const result = (0, authService_2.verifyToken)(token);
+        res.json({ valid: true });
+        return;
+    }
+    catch (err) {
+        res.status(401).json({ valid: false, message: 'Invalid token' });
+        return;
+    }
+});
 exports.default = router;
