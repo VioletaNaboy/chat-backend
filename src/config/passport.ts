@@ -32,7 +32,8 @@ passport.use(new GoogleStrategy({
                     value: email.value,
                     verified: email.verified
                 })),
-                image: profile.photos ? profile.photos[0].value : ''
+                image: profile.photos ? profile.photos[0].value : '',
+
             });
             await user.save();
         }
