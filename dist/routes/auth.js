@@ -27,8 +27,7 @@ router.get('/google/callback', passport_1.default.authenticate('google', { failu
             secure: true,
             sameSite: 'strict',
         });
-        const redirectUrl = req.query.redirectUrl ? req.query.redirectUrl : 'http://default-frontend-url.com';
-        console.log(redirectUrl);
+        const redirectUrl = 'https://dapper-figolla-b5bd07.netlify.app';
         res.redirect(`${redirectUrl}?token=${token}`);
     }
     else {
