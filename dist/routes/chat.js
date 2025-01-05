@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const Chat_1 = __importDefault(require("../models/Chat"));
 const verifyUser_1 = require("../middleware/verifyUser");
+const defaultChat_1 = require("../services/defaultChat");
 const router = (0, express_1.Router)();
 router.post('/chats', verifyUser_1.verifyUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { firstName, lastName } = req === null || req === void 0 ? void 0 : req.body;
@@ -66,6 +67,10 @@ router.delete('/chats/:id', verifyUser_1.verifyUser, (req, res) => __awaiter(voi
 router.get('/chats', verifyUser_1.verifyUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const chats = yield Chat_1.default.find({ createdBy: req.user });
+        ;
+        if (chats.length === 0) {
+            yield (0, defaultChat_1.createDefaultChats)(req.user);
+        }
         res.json(chats);
     }
     catch (err) {

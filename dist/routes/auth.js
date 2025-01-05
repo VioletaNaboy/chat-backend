@@ -15,8 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const passport_1 = __importDefault(require("passport"));
 const authService_1 = require("../services/authService");
-const Chat_1 = __importDefault(require("../models/Chat"));
-const defaultChat_1 = require("../services/defaultChat");
 const router = (0, express_1.Router)();
 router.get('/google', passport_1.default.authenticate('google', { scope: ['email'] }));
 router.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/' }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -28,10 +26,6 @@ router.get('/google/callback', passport_1.default.authenticate('google', { failu
             secure: true,
             sameSite: 'strict',
         });
-        const existingChats = yield Chat_1.default.find({ createdBy: user.googleId });
-        if (existingChats.length === 0) {
-            yield (0, defaultChat_1.createDefaultChats)(user.googleId);
-        }
         res.status(200).json({ message: 'Logged in successfully', user: req.user });
     }
     else {

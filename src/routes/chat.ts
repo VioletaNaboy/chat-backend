@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import Chat from '../models/Chat';
 import { verifyUser } from '../middleware/verifyUser';
 import { JwtPayload } from 'jsonwebtoken';
+import { createDefaultChats } from '../services/defaultChat';
 
 export interface CustomRequest extends Request {
     user?: string | JwtPayload;
@@ -64,9 +65,13 @@ router.delete('/chats/:id', verifyUser, async (req: CustomRequest, res: Response
         res.status(500).json({ message: 'Failed to delete chat', error: err });
     }
 });
-router.get('/chats', verifyUser, async (req: Request, res: Response) => {
+router.get('/chats', verifyUser, async (req: CustomRequest, res: Response) => {
     try {
-        const chats = await Chat.find({ createdBy: req.user });
+        const chats = await Chat.find({ createdBy: req.user });;
+
+        if (chats.length === 0) {
+            await createDefaultChats(req.user);
+        }
         res.json(chats);
     } catch (err) {
         res.status(500).json({ message: 'Failed to fetch chats', error: err });
