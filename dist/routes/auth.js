@@ -18,8 +18,18 @@ const authService_1 = require("../services/authService");
 const router = (0, express_1.Router)();
 router.get('/google', passport_1.default.authenticate('google', { scope: ['email'] }));
 router.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/' }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = req.user;
-    const token = (0, authService_1.generateToken)(user === null || user === void 0 ? void 0 : user.googleId);
-    res.json({ token });
+    if (req.isAuthenticated()) {
+        const user = req.user;
+        const token = (0, authService_1.generateToken)(user === null || user === void 0 ? void 0 : user.googleId);
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+        });
+        res.status(200).json({ message: 'Logged in successfully', user: req.user });
+    }
+    else {
+        res.status(401).json({ message: 'Authentication failed' });
+    }
 }));
 exports.default = router;

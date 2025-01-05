@@ -19,7 +19,7 @@ passport.deserializeUser(async (id: string, done) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID as string,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    callbackURL: "https://chat-backend-ofrx.onrender.com/auth/google/callback"
+    callbackURL: `https://${process.env.URL}/auth/google/callback`
 }, async (accessToken, refreshToken, profile, done) => {
     console.log('Google Profile:', profile);
     try {
@@ -36,9 +36,9 @@ passport.use(new GoogleStrategy({
             });
             await user.save();
         }
-        done(null, user); // Return user after successful authentication
+        done(null, user);
     } catch (err) {
-        done(err); // Return error if any
+        done(err);
     }
 }));
 

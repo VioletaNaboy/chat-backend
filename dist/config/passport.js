@@ -30,7 +30,7 @@ passport_1.default.deserializeUser((id, done) => __awaiter(void 0, void 0, void 
 passport_1.default.use(new passport_google_oauth20_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://chat-backend-ofrx.onrender.com/auth/google/callback"
+    callbackURL: `https://${process.env.URL}/auth/google/callback`
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     console.log('Google Profile:', profile);
@@ -48,9 +48,9 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
             });
             yield user.save();
         }
-        done(null, user); // Return user after successful authentication
+        done(null, user);
     }
     catch (err) {
-        done(err); // Return error if any
+        done(err);
     }
 })));
