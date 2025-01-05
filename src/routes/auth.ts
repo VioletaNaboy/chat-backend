@@ -22,7 +22,7 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
                 sameSite: 'strict',
             });
 
-            const redirectUrl = 'https://dapper-figolla-b5bd07.netlify.app'
+            const redirectUrl = 'https://dapper-figolla-b5bd07.netlify.app/callback'
             res.redirect(`${redirectUrl}?token=${token}`);
         } else { res.status(401).json({ message: 'Authentication failed' }); }
     });
