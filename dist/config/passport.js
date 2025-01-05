@@ -44,7 +44,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
                     value: email.value,
                     verified: email.verified
                 })),
-                image: profile.photos ? profile.photos[0].value : ''
+                image: profile.photos ? profile.photos[0].value : '',
             });
             yield user.save();
         }
