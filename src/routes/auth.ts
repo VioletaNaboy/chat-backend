@@ -22,8 +22,9 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
                 sameSite: 'strict',
             });
 
+            const redirectUrl = req.query.redirectUrl as string
 
-            res.status(200).json({ message: 'Logged in successfully', user: req.user, token });
+            return res.redirect(redirectUrl);
         } else { res.status(401).json({ message: 'Authentication failed' }); }
     });
 
