@@ -27,13 +27,13 @@ router.get('/google/callback', passport_1.default.authenticate('google', { failu
             secure: true,
             sameSite: 'strict',
         });
-        res.status(200).json({ message: 'Logged in successfully', user: req.user });
+        res.status(200).json({ message: 'Logged in successfully', user: req.user, token });
     }
     else {
         res.status(401).json({ message: 'Authentication failed' });
     }
 }));
-router.post('/auth/verify', (req, res) => {
+router.post('/verify', (req, res) => {
     var _a;
     const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
     if (!token) {
@@ -41,9 +41,8 @@ router.post('/auth/verify', (req, res) => {
         return;
     }
     try {
-        const result = (0, authService_2.verifyToken)(token);
-        res.json({ valid: true });
-        return;
+        (0, authService_2.verifyToken)(token);
+        res.status(200).json({ valid: true });
     }
     catch (err) {
         res.status(401).json({ valid: false, message: 'Invalid token' });

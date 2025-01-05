@@ -23,14 +23,14 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
             });
 
 
-            res.status(200).json({ message: 'Logged in successfully', user: req.user });
+            res.status(200).json({ message: 'Logged in successfully', user: req.user, token });
         } else { res.status(401).json({ message: 'Authentication failed' }); }
     });
 
 
 
 
-router.post('/auth/verify', (req: Request, res: Response) => {
+router.post('/verify', (req: Request, res: Response) => {
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -39,9 +39,8 @@ router.post('/auth/verify', (req: Request, res: Response) => {
     }
 
     try {
-        const result = verifyToken(token)
-        res.json({ valid: true });
-        return
+        verifyToken(token)
+        res.status(200).json({ valid: true });
     } catch (err) {
         res.status(401).json({ valid: false, message: 'Invalid token' });
         return;
