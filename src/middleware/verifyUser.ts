@@ -12,6 +12,8 @@ export const verifyUser: RequestHandler = (req: Request, res: Response, next: Ne
     try {
         const decoded = verifyToken(token);
         req.user = decoded;
+        console.log(req.user)
+        console.log(decoded)
         next();
     } catch (err) {
         res.status(401).json({ message: 'Unauthorized: Invalid token' });
